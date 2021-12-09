@@ -1,38 +1,33 @@
-const fs = require("fs");
-const readline = require("readline");
+const fs = require('fs');
+const readline = require('readline');
 
 async function processLineByLine() {
-  const fileStream = fs.createReadStream("aoc8input.txt");
+    const fileStream = fs.createReadStream('input8aoc.txt');
 
-  const rl = readline.createInterface({
-    input: fileStream,
-    crlfDelay: Infinity,
-  });
-  let lineArray = [];
-  for await (const line of rl) {
-    let newLine = line.split("|")[1];
-    lineArray.push(newLine.trim());
-  }
-  // Digits-signals
-  //1-2
-  //4-4
-  //7-3
-  //8-7
-  const digitsArray = Array.from({ length: 10 }, (x) => (x = 0));
-  lineArray.forEach((item) => {
-    let array = item.split(" ");
-    array.forEach((item) => {
-      if (item.length === 2) {
-        digitsArray[1] += 1;
-      } else if (item.length === 4) {
-        digitsArray[4] += 1;
-      } else if (item.length === 3) {
-        digitsArray[7] += 1;
-      } else if (item.length === 7) {
-        digitsArray[8] += 1;
-      }
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
     });
-  });
-  console.log(digitsArray.reduce((acc, a) => acc + a, 0));
+    let Arr = []
+    for await (const line of rl) {
+        let digitArray = line.split("");
+        digitArray = digitArray.map(x => +x);
+        Arr.push(digitArray);
+    }
+    const nums = [];
+    for (let i = 0; i < Arr.length; i++) {
+        for (let j = 0; j < Arr[i].length; j++) {
+            let e = Arr[i][j]
+            let top = Arr[i - 1] === undefined ? 100000 : Arr[i - 1][j]
+            let bot = Arr[i + 1] === undefined ? 100000 : Arr[i + 1][j]
+            let left = Arr[i][j - 1] ?? 100000;
+            let right = Arr[i][j + 1] ?? 100000;
+            if (e < left && e < bot && e < top && e < right) {
+                nums.push(e)
+            }
+
+        }
+    }
+    console.log(nums.reduce((acc, a) => acc + (a) + 1, 0))
 }
 processLineByLine();
